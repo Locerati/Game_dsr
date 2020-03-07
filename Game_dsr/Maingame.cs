@@ -16,17 +16,40 @@ namespace Game_dsr
             View.Printarray(array, (4, 1));
             bool roadexists1 = true;
             bool roadexists2 = true;
+            int j = 0;
+            int[,,] savearray = new int[16, 7, 5];
             do
             {
                 View.Printarray(array, index1[0]);
                 roadexists1 = Traffic.movementfirst(array, index1);
-                if (index2.Item1 > index1[0].Item1 && index2.Item1 > index1[1].Item1 && index2.Item1 > index1[2].Item1)
+                for (int k = 0; k < savearray.GetLongLength(1); k++)
+                {
+                    for (int i = 0; i < savearray.GetLongLength(2); i++)
+                    {
+                        savearray[j, k, i]=array[k,i];
+
+                    }
+                    
+                }
+                j++;
+                if ((index2.Item1 > index1[0].Item1 && index2.Item1 > index1[1].Item1 && index2.Item1 > index1[2].Item1)||roadexists1==false)
                 {
                     roadexists1 = false;
                     continue;
                 }
+
                 View.Printarray(array, index2);
                 roadexists2 = Traffic.movementsecond(array, ref index2);
+                for (int k = 0; k < savearray.GetLongLength(1); k++)
+                {
+                    for (int i = 0; i < savearray.GetLongLength(2); i++)
+                    {
+                        savearray[j, k, i] = array[k, i];
+
+                    }
+
+                }
+                j++;
                 if (index2.Item1 > index1[0].Item1 && index2.Item1 > index1[1].Item1 && index2.Item1 > index1[2].Item1)
                     roadexists1 = false;
             }
@@ -43,8 +66,20 @@ namespace Game_dsr
             }
             Console.ResetColor();
             Console.ReadKey();
-            Menu.switching();
+            Console.WriteLine("Do you want save game? Press Y if yes or press N if not");
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Y)
+                {
+                    Program.numbers.Add(Lasrgame.Writinggame(savearray));
+                    break;
+                }
+            } while (key.Key != ConsoleKey.N);
+                Menu.switching();
 
         }
+
     }
 }
